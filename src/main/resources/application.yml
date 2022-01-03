@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: kd-shop-boot
+  datasource:
+    # 数据库url
+    url: jdbc:mysql://localhost:3306/market?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 数据库 账号
+    username: root
+    # 数据库 密码
+    password: root
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 20
+      connection-test-query: SELECT 1 FROM DUAL
+  thymeleaf:
+    cache: false
+
+mybatis:
+  mapper-locations:
+    - classpath*:mappers/*.xml

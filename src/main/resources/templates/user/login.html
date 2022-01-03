@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>登录-科大二手工坊</title>
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/layui.all.js}"></script>
+    <script type="text/javascript" th:src="@{/js/layui.js}"></script>
+    <link type="text/css" id="layuicss-laydatecss" rel="stylesheet" th:href="@{/js/css/modules/laydate/laydate.css}">
+    <link type="text/css" id="layuicss-skinlayercss" rel="stylesheet"
+          th:href="@{/js/css/modules/layer/default/layer.css}">
+    <link type="text/css" id="layuicss-skincodecss" rel="stylesheet" th:href="@{/js/css/modules/code.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/js/css/layui.css}">
+
+    <link type="text/css" rel="stylesheet" th:href="@{/css/public.css}">
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/login.css}">
+
+    <script type="text/javascript">
+        function check_login() {
+            var phoneReg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+            if ($('.phoneNum').val() == '' || $('.phoneNum').val() == undefined) {
+                $('.phoneNum').focus()
+                return layer.tips('请输入手机号', '.phoneNum')
+            } else if (!phoneReg.test($('.phoneNum').val())) {
+                $('.phoneNum').focus()
+                return layer.tips('手机号格式有误', '.phoneNum')
+            }
+            if ($('.password').val() === '' || $('.password').val() === undefined) {
+                $('.password').focus();
+                return layer.tips('请输入密码', '.password')
+            }
+            var url = '/user/login';
+            var index = "/goods/index";
+            console.log('index = ' + index);
+            var Data = {
+                phone: $('.phoneNum').val(),
+                password: $('.password').val()
+            }
+            Common.ajax(url, Data, function (data) {
+                layer.msg(data.msg)
+                if (data.success) {
+                    setTimeout(function () {
+                        alert(data.reurl);
+                        if (data.reurl === '' || data.reurl === undefined) {
+
+                            location.href = 'http://'+location.host + index;
+                        } else {
+                            console.log('refer=' + document.referrer);
+                            alert('not null-->' + data.reurl);
+                            console.log(data.reurl);
+                            location.href = data.reurl;
+                        }
+                    }, 2000)
+                }
+            }, function (err) {
+                console.log(err)
+            }, function () {
+            }, true, 'POST')
+        }
+    </script>
+</head>
+<body>
+<div id="header">
+    <a href="" class="logo"></a>
+</div>
+<div id="login-main">
+    <div class="layui-tab layui-tab-brief reg-left fl">
+        <!-- <ul class="layui-tab-title">
+            <li class="layui-this">手机号注册</li>
+            <li>邮箱注册</li>
+        </ul> -->
+        <div class="layui-tab-content">
+            <form class="layui-tab-item layui-show layui-form">
+                <div class="layui-form-item">
+                    <input type="text" name="phone" autocomplete="off" lay-verify="phone" placeholder="请输入手机号/邮箱"
+                           class="layui-input phoneNum">
+                </div>
+                <div class="layui-form-item">
+                    <input type="password" name="password" autocomplete="off" lay-verify="password" placeholder="请输入密码"
+                           class="layui-input password">
+                </div>
+                <div class="layui-form-item forgetpwd">
+                    <a th:href="@{/user/forget_password}">忘记密码？</a>
+                </div>
+                <a class="layui-btn login-btn" onclick="check_login();">登 录</a>
+            </form>
+            <!-- <div class="layui-tab-item">内容2</div> -->
+        </div>
+    </div>
+    <div class="log-right right-box fr">
+        <p>没有账号？</p>
+        <a href="/user/toRegister">立即注册</a>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/jquery.md5.js}"></script>
+<script type="text/javascript" th:src="@{/js/login.js}"></script>
+</body>
+</html>

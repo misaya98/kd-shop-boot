@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>首頁-科大二手工坊</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/layui.all.js}"></script>
+    <link id="layuicss-laydatecss" rel="stylesheet" th:href="@{/js/css/modules/laydate/laydate.css}" media="all">
+    <link id="layuicss-skinlayercss" rel="stylesheet" th:href="@{/js/css/modules/layer/default/layer.css}"
+          media="all">
+    <link id="layuicss-skincodecss" rel="stylesheet" th:href="@{/js/css/modules/code.css}" media="all">
+    <link rel="stylesheet" th:href="@{/js/css/layui.css}">
+
+    <link rel="stylesheet" th:href="@{/css/public.css}">
+    <script th:src="@{/js/common.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+
+<body>
+<div id="header">
+    <div class="header-wrap">
+        <%--<a href="/goods/index" class="logo fl">
+        <img src="" alt="">
+        <h1></h1>
+    </a>--%>
+        <ul class="nav fl">
+            <li><a href="/goods/index">科大二手工坊</a></li>
+        </ul>
+        <div class="nav-right fr">
+
+            <a th:if="${cur_user} != null" th:href="@{/user/index}" class="log-btn">
+                <img th:src="@{/images/web/user/${cur_user.imgUrl}}" class="user-header-image">${cur_user.username}
+            </a>
+            <a th:if="${cur_user} != null" th:href="@{/user/logout}" class="log-btn">退出</a>
+
+            <th:if test="${empty cur_user}">
+                <a th:if="${cur_user} == null" th:href="@{/user/toRegister}" class="log-btn">注册</a>
+                <a th:if="${cur_user} == null" th:href="@{/user/toLogin}" class="log-btn">登录</a>
+            </th:if>
+        </div>
+    </div>
+</div>
+<div id="header-bottom">
+    <div class="header-bottom-wrap clearfix">
+        <%--
+        <div class="city fl">
+            <a href="javascript">科大二手工坊<i class="icon"></i></a>
+        </div>
+        --%>
+        <div class="search-wrap fl">
+            <div class="search">
+                <input type="text" class="keywords" placeholder="请输入关键词">
+                <a href="javascript:;" class="search-btn search-normal-btn">搜索</a>
+            </div>
+        </div>
+        <div class="publish fr">
+            <a href="/publish/publish" class="publish-btn"><i class="icon"></i>发布 闲置</a>
+        </div>
+    </div>
+</div>
+<div id="main" class="clearfix">
+    <div class="category fl" style="">
+        <ul>
+            <c:forEach var="item" items="${Catelog1}">
+                <li>
+                    <a href="<%=basePath%>goods/catelog/${item.id}">
+                        <c:out value="${item.name}"></c:out>
+                        <i class="icon"></i></a>
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
+    <div class="main-box fl" style="margin-left: 0px;">
+        <div class="banner">
+            <div class="focusMap fl">
+                <span class="prev" style="display: block;"><i class="icon"></i></span>
+                <span class="next" style="display: block;"><i class="icon"></i></span>
+                <ul class="rImg">
+
+                    <li th:each="item :${carousel}" style="display: list-item;">
+                        <a th:href="${item.url}" target="_blank">
+                            <img th:src="@{/images/admin/${item.imgUrl}}" th:alt="${item.title}"
+                                 th:title="${item.title}"></a>
+                    </li>
+                </ul>
+
+                <ul class="button">
+                    <c:if test="${fn:length(carousel)<=1}">
+                        <li th:if="" class="on"></li>
+                    </c:if>
+                    <c:if test="${fn:length(carousel)>1}">
+                        <c:forEach var="item" items="${carousel}">
+                            <li class=""></li>
+                        </c:forEach>
+                    </c:if>
+
+                </ul>
+
+            </div>
+        </div>
+        <div class="index-list">
+            <div class="list-header">
+                <a href="/goods/index" class="active">最新</a>
+                <a th:href="@{/category/?n=true}" class="">推荐</a>
+                <a th:href="@{/publish/publish}" class="fr"><i class="icon"></i>发布信息</a>
+            </div>
+            <div class="list-body">
+                <ul class="clearfix">
+
+                    <li th:each="item:${Goods1}">
+                        <a th:href="@{/detail/detail/${item.goods.id}}" target="_blank" class="good-image">
+                            <img class="image-show-box"
+                                 th:src="@{/images/web/${item.images[0].imgUrl}}"/>
+                            <img class="image-real-box"
+                                 th:src="@{/images/web/${item.images[0].imgUrl}}"/>
+                            <img class="image-show-box"
+                                 th:src="@{/images/web/${item.images[0].imgUrl}}">
+                            <img class="image-real-box"
+                                 th:src="@{/images/web/${item.images[0].imgUrl}}" th:alt="${item.goods.name}"
+                            />
+                        </a>
+                        <a th:href="@{/detail/detail/${item.goods.id}}" target="_blank" class="good-title">
+                            ${item.goods.name}
+                        </a>
+                        <span class="good-price" th:text=" '￥' + ${item.goods.price}">￥ --</span>
+                        <span class="pub-time fr" th:text=" '更新时间' + ${item.goods.polishTime}">更新时间 ----</span>
+                    </li>
+                </ul>
+            </div>
+
+            <%--分页HTML代码--%>
+            <%--
+            <div id="page">--%>
+                <%--
+                <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0">--%>
+                    <%--<span class="layui-laypage-curr">--%>
+                                <%--<em class="layui-laypage-em"></em>--%>
+                                <%--<em>1</em>--%>
+                            <%--</span>--%>
+                    <%--&lt;%&ndash; <a href="javascript:;" data-page="2">2</a>--%>
+                    <%--<a href="javascript:;" data-page="3">3</a>--%>
+                    <%--<a href="javascript:;" data-page="4">4</a>--%>
+                    <%--<a href="javascript:;" data-page="5">5</a>--%>
+                    <%--<span>…</span>--%>
+                    <%--<a href="javascript:;" class="layui-laypage-last" title="尾页" data-page="7">末页</a>--%>
+                    <%--<a href="javascript:;" class="layui-laypage-next" data-page="2">--%>
+                        <%--<em>&gt;</em>--%>
+                        <%--</a>&ndash;%&gt;--%>
+                    <%--
+                </div>
+                --%>
+                <%--
+            </div>
+            --%>
+        </div>
+    </div>
+    <div class="sidebar fr">
+        <div class="sidebar-main-right">
+            <a class="sidebar-header" <%--href="/category/quan" target="_blank"--%> >浏览量</a>
+            <ul class="jizhuan-list">
+                <c:forEach var="item" items="${Goods2}">
+                    <li>
+                        <a href="<%=basePath%>detail/detail/${item.goods.id}" class="jizhuan" target="_blank">
+                            <img class="jizhuan-image" th:src="@{/images/web/${item.images[0].imgUrl}}"/>
+                            <img class="jizhuan-image" th:src="@{/images/web/${item.images[0].imgUrl}}"
+                                 alt="<c:out value=" ${item.goods.name}"></c:out>"
+                            <p class="jizhuan-title">
+                                <c:out value="${item.goods.name}"></c:out>
+                            </p>
+                            <p>
+                                <span class="yhq">￥<c:out value="${item.goods.price}"></c:out></span>
+                                <span class="jizhuan-price">￥<c:out value="${item.goods.realPrice}"></c:out></span>
+                            </p>
+                        </a>
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="footer">
+    <div class="go-to-top" style="left: 1515px; display: none;">
+        <a href="#" title="回顶部" class="icon"></a>
+    </div>
+    <div class="footer-bottom-wrap">
+        <div class="footer-bottom">
+
+
+            <p class="tips">本站所有信息均为用户自由发布，本站不对信息的真实性负任何责任，交易时请注意识别信息的真假如有网站内容侵害了您的权益请联系我们删除</p>
+            <p class="right">
+                <span>Copyright © 2017-2018, kd-second-hand-workshop, All Rights Reserved</span>　
+            </p>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/index.js}"></script>
+<div class="layui-layer-move"></div>
+</body>
+</html>
